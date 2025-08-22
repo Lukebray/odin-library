@@ -21,11 +21,16 @@ function Book(title, author, pageCount) {
     this.author = author;
     this.pageCount = pageCount;
     this.read = false;
-    this.getDetails = function () {
-        return `${this.title} by ${this.author} - ${this.pageCount} pages.`;
-    }
 }
 
+Book.prototype.getDetails = function () {
+    return `${this.title} by ${this.author} - ${this.pageCount} pages.`;
+};
+
+Book.prototype.toggleRead = function () {
+    this.read = !this.read;
+    return this.read;
+};
 
 function handleOnLoad() {
     renderLibrary(myLibrary);
@@ -58,14 +63,9 @@ function renderLibrary(library) {
         const markAsReadButton = document.createElement('button');
         book.read ? markAsReadButton.textContent = "READ" : markAsReadButton.textContent = "NOT READ";
         markAsReadButton.addEventListener("click", () => {
-            book.read = !book.read;
-            if (book.read) {
-                markAsReadButton.textContent = "READ"
-                newDiv.className = 'read-card';
-            } else {
-                markAsReadButton.textContent = "NOT READ"
-                newDiv.className = 'unread-card';
-            }
+            const isRead = book.toggleRead(); // toggles and returns the new value
+            markAsReadButton.textContent = isRead ? "READ" : "NOT READ";
+            newDiv.className = isRead ? "read-card" : "unread-card";
         });
         newDiv.append(markAsReadButton);
         newDiv.append(removeButton);
